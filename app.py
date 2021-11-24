@@ -1,17 +1,18 @@
 from flask import Flask
 from flask_restx import Api
 
-from models import Movie, Director, Genre
 from setup import db
 from views.movies import movies_ns
 from views.directors import directors_ns
 from views.genres import genres_ns
+from config import Config
+
+config = Config()
+
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    #app.config.from_object(config_object)
+    app.config.from_object(config)
     register_extensions(app)
     return app
 
@@ -34,7 +35,7 @@ def create_data(app, db):
             db.session.add_all()
 
 
-app = create_app()  ## app = create_app(Config())
+app = create_app()
 app.debug = True
 
 if __name__ == '__main__':
