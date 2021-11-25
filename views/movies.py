@@ -1,11 +1,9 @@
-from flask import Flask, request
+from flask import request
 
-from app import app
 from models import Movie, MovieSchema
 from flask_restx import Resource, reqparse, Namespace, Api
 from setup import db
 
-api = Api(app)
 
 movie_ns = Namespace('movies')
 
@@ -19,7 +17,8 @@ movies_schema = MovieSchema(many=True)
 
 @movie_ns.route("/")
 class MoviesView(Resource):
-    @api.expect(parser)
+
+    @movie_ns.expect(parser)
     def get(self):
         movies_director = parser.parse_args()["director_id"]
         movies_genre = parser.parse_args()["genre_id"]

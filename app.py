@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_restx import Api
-from flask_sqlalchemy import SQLAlchemy
 
 from models import Director, Genre, Movie
 from setup import db
@@ -11,11 +10,6 @@ from config import Config
 from data import data
 
 config = Config()
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
 
 def create_app():
@@ -36,6 +30,8 @@ def register_extensions(app):
 
 def create_data(app, db):
     with app.app_context():
+        db.drop_all()
+        db.create_all()
         for movie in data["movies"]:
             m = Movie(
                 id=movie["pk"],
@@ -52,7 +48,7 @@ def create_data(app, db):
 
         for director in data["directors"]:
             d = Director(
-                id=director["pk"],
+
                 name=director["name"],
             )
             with db.session.begin():
@@ -60,7 +56,7 @@ def create_data(app, db):
 
         for genre in data["genres"]:
             d = Genre(
-                id=genre["pk"],
+
                 name=genre["name"],
             )
             with db.session.begin():
@@ -72,5 +68,5 @@ app.debug = True
 create_data(app, db)
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=10001, debug=True)
+    app.run(host="localhost", port=10004, debug=True)
 
