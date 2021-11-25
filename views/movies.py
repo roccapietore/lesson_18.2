@@ -1,7 +1,11 @@
 from flask import Flask, request
+
+from app import app
 from models import Movie, MovieSchema
-from flask_restx import Api, Resource, reqparse, Namespace, api
+from flask_restx import Resource, reqparse, Namespace, Api
 from setup import db
+
+api = Api(app)
 
 movie_ns = Namespace('movies')
 
@@ -78,3 +82,4 @@ class MovieView(Resource):
         db.session.delete(movie)
         db.session.commit()
         return "", 204
+
