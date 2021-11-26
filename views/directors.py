@@ -11,6 +11,7 @@ directors_schema = DirectorSchema(many=True)
 @director_ns.route('/')
 class DirectorsView(Resource):
     def get(self):
+        directors = director_service.get_all()
 
         directors_ = directors_schema.dump(directors)
         return directors_, 200
