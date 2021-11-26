@@ -1,7 +1,7 @@
 from dao.model.director import Director
 
 
-class GenreDao:
+class DirectorDao:
     def __init__(self, session):
         self.session = session
 
@@ -9,4 +9,7 @@ class GenreDao:
         return self.session.query(Director).get(id)
 
     def get_all(self):
+        return self.session.query(Director).all()
+
+    def create(self):
         return self.session.query(Director).all()
