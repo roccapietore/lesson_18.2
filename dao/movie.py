@@ -1,4 +1,5 @@
 from dao.model.movie import Movie
+from marshmallow import Schema, fields
 
 
 class MovieDao:
@@ -18,3 +19,16 @@ class MovieDao:
         movie = self.get_one(id=id)
         self.session.delete(movie)
         self.session.commit()
+
+
+class MovieSchema(Schema):
+    id = fields.Int()
+    title = fields.Str()
+    description = fields.Str()
+    trailer = fields.Str()
+    year = fields.Int()
+    rating = fields.Float()
+    genre_id = fields.Int()
+    director_id = fields.Int()
+
+

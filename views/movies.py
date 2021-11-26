@@ -1,6 +1,6 @@
 from flask import request
 
-from models import Movie, MovieSchema
+from dao.movie import Movie, MovieSchema
 from flask_restx import Resource, reqparse, Namespace, Api
 from setup import db
 

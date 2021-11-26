@@ -1,4 +1,5 @@
 from dao.model.genre import Genre
+from marshmallow import Schema, fields
 
 
 class GenreDao:
@@ -10,3 +11,9 @@ class GenreDao:
 
     def get_all(self):
         return self.session.query(Genre).all()
+
+
+class GenreSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+
