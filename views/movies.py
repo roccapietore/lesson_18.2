@@ -1,7 +1,7 @@
 from flask import request
-
 from dao.movie import Movie, MovieSchema
 from flask_restx import Resource, reqparse, Namespace, Api
+from implemented import movie_service
 from setup import db
 
 
@@ -43,25 +43,19 @@ class MoviesView(Resource):
 
     def post(self):
         req_json = request.json
-        new_movies = Movie(**req_json)
-        with db.session.begin():
-            db.session.add(new_movies)
+        posted_movie = movie_service.create(id)
         return "", 201
 
 
 @movie_ns.route("/<id>")
 class MovieView(Resource):
     def get(self, id: int):
-        movie = Movie.query.get(id)
-        if not movie:
-            return "", 404
+        movie = movie_service.get_one(id)
         get_movie = movie_schema.dump(movie)
         return get_movie, 200
 
     def put(self, id: int):
-        movie = Movie.query.get(id)
-        if not movie:
-            return "", 404
+        movie = movie_service.get_one(id)
         req_json = request.json
         movie.title = req_json.get("title")
         movie.description = req_json.get("description")
@@ -70,15 +64,11 @@ class MovieView(Resource):
         movie.rating = req_json.get("rating")
         movie.genre_id = req_json.get("genre_id")
         movie.director_id = req_json.get("director_id")
-        db.session.add(movie)
-        db.session.commit()
+        updated_movie = movie_service.update(movie)
         return "", 204
 
     def delete(self, id: int):
-        movie = Movie.query.get(id)
-        if not movie:
-            return "", 404
-        db.session.delete(movie)
-        db.session.commit()
+        movie = movie_service.delete(id)
+
         return "", 204
 

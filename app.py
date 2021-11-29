@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_restx import Api
 
-from models import Director, Genre, Movie
+from dao.director import Director
+from dao.genre import Genre
+from dao.movie import Movie
 from setup import db
 from views.movies import movie_ns
 from views.directors import director_ns
@@ -68,5 +70,5 @@ app.debug = True
 create_data(app, db)
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=10004, debug=True)
+    app.run(host="localhost", port=10005, debug=True)
 

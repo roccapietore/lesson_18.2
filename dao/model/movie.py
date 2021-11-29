@@ -1,7 +1,6 @@
 from setup import db
 
 
-
 class Movie(db.Model):
     __tablename__ = 'movies'
     id = db.Column(db.Integer, primary_key=True)
