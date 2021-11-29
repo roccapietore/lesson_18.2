@@ -1,15 +1,10 @@
 from flask import request
 from dao.movie import Movie, MovieSchema
-from flask_restx import Resource, reqparse, Namespace, Api
+from flask_restx import Resource, Namespace
 from implemented import movie_service
-from setup import db
 
 
 movie_ns = Namespace('movies')
-
-parser = reqparse.RequestParser()
-parser.add_argument("director_id", type=int)
-parser.add_argument("genre_id", type=int)
 
 movie_schema = MovieSchema()
 movies_schema = MovieSchema(many=True)
@@ -17,27 +12,7 @@ movies_schema = MovieSchema(many=True)
 
 @movie_ns.route("/")
 class MoviesView(Resource):
-
-    @movie_ns.expect(parser)
-    def get(self):
-        movies_director = parser.parse_args()["director_id"]
-        movies_genre = parser.parse_args()["genre_id"]
-
-        if movies_director and movies_genre:  # поиск фильмов по режиссеру и жанру
-            filtered_movies = Movie.query.filter_by(director_id=movies_director, genre_id=movies_genre).all()
-
-        elif movies_genre:  # поиск фильмов по жанру
-            filtered_movies = Movie.query.filter_by(genre_id=movies_genre).all()
-
-        elif movies_director:  # поиск фильмов по режиссеру
-            filtered_movies = Movie.query.filter_by(director_id=movies_director).all()
-
-        else:  # вывод всех фильмов
-            filtered_movies = Movie.query.all()
-
-        if not filtered_movies:
-            return "", 404
-
+    def get(self, filtered_movies):
         movies = movies_schema.dump(filtered_movies)
         return movies, 200
 

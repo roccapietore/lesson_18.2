@@ -70,5 +70,5 @@ app.debug = True
 create_data(app, db)
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=10005, debug=True)
+    app.run(host="localhost", port=10007, debug=True)
 
