@@ -1,5 +1,5 @@
 from implemented import director_service
-from dao.director import DirectorSchema
+from dao.model.director import DirectorSchema
 from flask_restx import Resource, Namespace
 
 
@@ -17,9 +17,9 @@ class DirectorsView(Resource):
         return directors_, 200
 
 
-@director_ns.route('/<id>')
+@director_ns.route('/<did>')
 class DirectorView(Resource):
-    def get(self, id: int):
-        director = director_service.get_one(id)
+    def get(self, did: int):
+        director = director_service.get_one(did)
         director_ = directors_schema.dump(director)
         return director_, 200

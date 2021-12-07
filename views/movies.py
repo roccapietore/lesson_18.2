@@ -1,8 +1,7 @@
 from flask import request
-from dao.movie import Movie, MovieSchema
+from dao.model.movie import MovieSchema
 from flask_restx import Resource, Namespace
 from implemented import movie_service
-
 
 movie_ns = Namespace('movies')
 
@@ -12,38 +11,41 @@ movies_schema = MovieSchema(many=True)
 
 @movie_ns.route("/")
 class MoviesView(Resource):
-    def get(self, filtered_movies):
-        movies = movies_schema.dump(filtered_movies)
+
+    def get(self):
+        director = request.args.get("director_id")
+        genre = request.args.get("genre_id")
+        year = request.args.get("year")
+        filters = {
+            "director_id": director,
+            "genre_id": genre,
+            "year": year,
+        }
+        all_movies = movie_service.get_all(filters)
+        movies = movies_schema.dump(all_movies)
         return movies, 200
 
     def post(self):
         req_json = request.json
-        posted_movie = movie_service.create(id)
-        return "", 201
+        posted_movie = movie_service.create(req_json)
+        return "", 201,  {"location": f"/movies/{posted_movie.id}"}
 
 
-@movie_ns.route("/<id>")
+@movie_ns.route("/<int:mid>")
 class MovieView(Resource):
-    def get(self, id: int):
-        movie = movie_service.get_one(id)
+    def get(self, mid: int):
+        movie = movie_service.get_one(mid)
         get_movie = movie_schema.dump(movie)
         return get_movie, 200
 
-    def put(self, id: int):
-        movie = movie_service.get_one(id)
+    def put(self, mid: int):
         req_json = request.json
-        movie.title = req_json.get("title")
-        movie.description = req_json.get("description")
-        movie.trailer = req_json.get("trailer")
-        movie.year = req_json.get("year")
-        movie.rating = req_json.get("rating")
-        movie.genre_id = req_json.get("genre_id")
-        movie.director_id = req_json.get("director_id")
-        updated_movie = movie_service.update(movie)
+        if "id" not in req_json:
+            req_json["id"] = mid
+        movie_service.update(req_json)
         return "", 204
 
-    def delete(self, id: int):
-        movie = movie_service.delete(id)
-
+    def delete(self, mid: int):
+        movie_service.delete(mid)
         return "", 204
 

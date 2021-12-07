@@ -1,5 +1,4 @@
 from dao.model.director import Director
-from marshmallow import Schema, fields
 
 
 class DirectorDao:
@@ -12,10 +11,6 @@ class DirectorDao:
     def get_all(self):
         return self.session.query(Director).all()
 
-
-class DirectorSchema(Schema):
-    id = fields.Int()
-    name = fields.Str()
 
 
 
